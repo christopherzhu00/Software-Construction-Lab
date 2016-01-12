@@ -1,0 +1,74 @@
+Christopher Zhu
+UID:104455996
+
+To begin off with this lab focused on parallelism, I check the version of 
+GNU coreutils to see if the version is relevant to use GNU sort with multiple 
+threads to improve the performance of programs. To check this, I use the 
+command: sort --version and conclude that the version is fine since I'm using 
+GNU coreutils 8.24
+
+Next, I add the /usr/local/cs/bin to PATH by using the command: 
+export PATH=/usr/local/cs/bin:$PATH 
+
+Afterwards, I need to generate a file which contains 10 million random 
+double-precision floating point numbers with no white space and only one per 
+line. I satisfy these conditions by using the commmand:
+
+od -t f -N 40000000 < /dev/urandom | tr -s ' ' '\n' > randomdouble.txt
+
+I set the number of bytes to be 40000000 because a float is 4 bytes and we 
+want 10,000,000 random double-precision floating point numbers. I then 
+use the tr command with the squeeze -s flag so that I change spaces to 
+a single new line. 
+
+Now I want to time to the command sort -g on the file I just made by using 
+the time command with the -p flag and then send the output to /dev/null. 
+To do this, I utilize the command: 
+
+time -p sort - g randomdouble.txt > /dev/null
+
+This results in the following output below: 
+real 19.46
+user 109.26
+sys 0.27
+
+
+Next, I want to invoke with the --parallel options to examine how fast the 
+program will run with multiple threads. The results are shown below for 
+1, 2, 4, and 8 threads.
+
+To do 1 thread, I use the command: 
+time -p sort -g --parallel=1 randomdouble.txt > /dev/null
+real 102.82
+user 102.68
+sys 0.15
+
+
+To do 2 threads, I use the command: 
+time -p sort -g --parallel=2 randomdouble.txt > /dev/null
+real 55.00
+user 105.11
+sys 0.17
+
+
+
+To do 4 threads, I use the command: 
+time -p sort -g --parallel=4 randomdouble.txt > /dev/null
+real 30.62
+user 104.29
+sys 0.22
+
+
+
+To do 8 threads, I use the command: 
+time -p sort -g --parallel=8 randomdouble.txt > /dev/null
+real 22.54
+user 121.92
+sys 0.26
+
+As can be seen from the results, the usage of more threads results in a 
+shorter time which shows parallelism is an effective method to improve 
+the performance of a program.
+
+
+

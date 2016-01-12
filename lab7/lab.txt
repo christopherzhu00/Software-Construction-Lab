@@ -1,0 +1,135 @@
+Christopher Zhu
+UID: 104455996
+
+In this lab, it wants us to reproduce the tr function in two ways: first 
+with getchar and putchar to transliterate bytes and second by using 
+read and write to transliterate bytes.
+
+1. I first create tr2b.c which uses getchar and putchar.
+
+I take care of error cases by checking if there are the correct 
+number of arguments, checking for no duplicate bytes in the from argument, 
+and checking to make sure that the arguments are the same length. I do this 
+by using the fprintf(stderr, "") command and then use the exit command to 
+take me out of the program. 
+
+I make sure I calculate the size of the arguments by creating a for loop 
+which goes through the argument until it reaches a null byte. 
+
+Afterwards, I finally get to write the actual implementation for the tr 
+function by making a while loop which uses getchar until it reaches the 
+end of file. For each character, I check whether or not it needs to be 
+translated. If it needs to be, I would use the putchar and print out 
+the translated result and if it did not need to be translated, I just 
+putchar the character because it does not need to be translated.
+
+
+2. For the tr2u.c, which uses read and write instead of getchar and putchar, 
+it basically uses most of the code from tr2b.c to check for the error cases. 
+Now, instead of using getchar, I create a single char buffer since it is 
+part of the arguments for the read and write commands. Next, I basically 
+read each character which stores it inside the buffer and then I check 
+whether it needs to be translated. If it does, I change the buffer to the 
+translated counterpart and then at the end I just use the write command 
+to print to stdout. 
+
+3. To do the second part of the lab, it requires a file that contains at 
+least 5,000,000 bytes. To fulfill this requirement, I use the command: 
+head --bytes=5000000 /dev/urandom > reallybigfile
+This fills the file with random characters. 
+I make sure I compile my c files first by using the commands: 
+gcc -o tr2u tr2u.c 
+and 
+gcc -o tr2b tr2b.c
+
+a. Next to check when copying one file to another I use the command: 
+
+strace -o output1.txt ./tr2u abc def < reallybigfile > copyoutput3.txt 
+
+I check to see how many system calls were made by using the wc command 
+with the -l flag to count the lines which gives me 10000026 system calls 
+for the unbuffered method. 
+
+I then check for the buffered method by using the command: 
+
+strace -o output2.txt ./tr2b abc def < reallybigfile > copyoutput4.txt 
+
+By using the same method to calculate the number of system calls by 
+using the wc command with the -l flag, I obtain 184 system calls.
+
+b. 
+Next to check for copying a file to my terminal I use the command: 
+
+strace -o output3.txt ./tr2u abc def < reallybigfile 
+to test for unbuffered.
+
+Afterwards, I check to see if it actually worked by using the command: 
+ls -lt 
+and sure enough, the file in output1.txt is really big.
+I then find out how many system calls there are by using the wc command 
+with the -l flag and get 10000026 system calls. I then do the same thing 
+with tr2b by using the command: 
+strace -o output4.txt ./tr2b abc def < reallybigfile 
+After using the wc command with the -l flag, I get that there were 20144 
+system calls which is significantly less than the other unbuffered method. 
+
+The reason why copying one file to another for the buffered method has 
+much fewer system calls than just copying a file to the terminal is because 
+copying a file to another doesn't need to use putchar since it never writes 
+to standard output.
+
+c.
+I used the time command to calculate the time to compare when copying the 
+same amount of data. The results are seen below.
+
+time ./tr2u abc def < reallybigfile
+
+real 	0m6.077s
+user 	0m0.293s
+sys 	0m5.772s
+
+time ./tr2b abc def < reallybigfile
+
+real	0m4.635s
+user 	0m0.301s
+sys 	0m0.115s
+
+time ./tr2u abc def < reallybigfile > output5.txt
+real    0m5.477s
+user    0m0.304s
+sys     0m5.100s
+
+time ./tr2b abc def < reallybigfile > output6.txt
+real    0m0.222s
+user    0m0.147s
+sys     0m0.005s
+
+My conclusions is that copying files to another is faster for each one 
+respectively and buffered is faster than unbuffered at least for system time. 
+The real time is shortest when using buffered and copying from one file to 
+another and then unbuffered when copying form one file to another, then 
+buffered copying to terminal, and then unbuffered copying to terminal.
+
+By using the ls -l command and showing the results below, it shows my 
+history of performing the lab 
+
+[christoz@lnxsrv04 ~/Desktop]$ ls -l
+total 896524
+-rw-r--r-- 1 christoz csugrad   5000000 Nov 14 18:19 copyoutput3.txt
+-rw-r--r-- 1 christoz csugrad   5000000 Nov 14 18:29 copyoutput4.txt
+-rw-r--r-- 1 christoz csugrad 440001654 Nov 14 17:38 output1.txt
+-rw-r--r-- 1 christoz csugrad   2147984 Nov 14 17:48 output2.txt
+-rw-r--r-- 1 christoz csugrad 440001655 Nov 14 18:19 output3.txt
+-rw-r--r-- 1 christoz csugrad     19948 Nov 14 18:29 output4.txt
+-rw-r--r-- 1 christoz csugrad   5000000 Nov 14 18:37 output5.txt
+-rw-r--r-- 1 christoz csugrad   5000000 Nov 14 18:38 output6.txt
+-rw-r--r-- 1 christoz csugrad   5000000 Nov 14 17:01 reallybigfile
+drwx------ 2 christoz csugrad      4096 Nov  7 18:26 $RECYCLE.BIN
+-rwxr-xr-x 1 christoz csugrad     12407 Nov  1 22:19 sfrob
+-rw-r--r-- 1 christoz csugrad      2470 Nov  1 22:15 sfrob.c
+drwxr-xr-x 2 christoz csugrad      4096 Oct 10 22:44 testing
+-rw-r--r-- 1 christoz csugrad        12 Nov 14 16:05 test.txt
+-rwxr-xr-x 1 christoz csugrad      7700 Nov 14 16:46 tr2b
+-rwxr--r-- 1 christoz csugrad      1092 Nov 14 16:46 tr2b.c
+-rwxr-xr-x 1 christoz csugrad      7663 Nov 14 18:11 tr2u
+-rwxr--r-- 1 christoz csugrad      1110 Nov 14 18:11 tr2u.c

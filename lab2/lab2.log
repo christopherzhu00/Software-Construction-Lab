@@ -1,0 +1,184 @@
+Christopher Zhu
+UID: 104455996 
+
+First check locale by entering in command prompt locale. In the output, it 
+shows that LC_CTYPE is "en_US.UTF-8" so I use the following shell command 
+export LC_ALL='C' to change all the locales to C and then use the command 
+locale to check. Sure enough, all the locales are now C.
+
+Next I used the command cat /usr/share/dict/words|sort -u > words.txt so 
+that I get the contents from the file words and sort them by piping the 
+contents. The -u command makes it so I only obtain unique words.
+
+
+I created a text file called poop.txt to hold the information from the html 
+by using the wget command in the form: wget -O poop.txt HW_URL_HERE
+
+By utilizing the command: cat poop.txt | tr -c 'A-Za-z' '[\n*]'
+I feed the information from poop.txt into the trace command.
+I notice that the command changes any non-alphabetic character to a newline 
+character 
+
+Next, by utilizing the command: cat poop.txt | tr -cs 'A-Za-z' '[\n*]'
+I notice that the extra newlines are gone because the extra -s flag acts as 
+a way to combine multiple non-alphabetic characters that are consecutive 
+so that only one new line command replaces them.
+
+Afterwards, by utilizing the command: 
+cat poop.txt | tr -cs 'A-Za-z' '[\n*]' | sort
+I notice that it sorts the output from the last command in alphabetical 
+format since it starts with "a" and ends with "Za" so lowercase letters 
+are considered to be < than uppercase letters.
+
+Next, using the command:
+cat poop.txt | tr -cs 'A-Za-z' '[\n*]' | sort -u
+I notice that it produces output that is the same as the previous command 
+except that it only has one instance of each word. Therefore, I can 
+conclude that the -u flag produces only unique outputs. 
+
+Next, using the command:
+cat poop.txt | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words
+This produces three columns as output. The command comm compares the two 
+files (poop.txt and words) and then has three columns with information. 
+The first column shows lines unique to the first file while the second 
+column shows lines unique to the second file. The third column shows lines 
+that are shared by both files. 
+
+Finally, using the command:
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
+The -23 flag produces output of only column 1 while hiding columns 2 and 3. 
+Therefore, the words that are seen on the output are unique to poop.txt 
+or whatever the first file is.
+
+Starting with the lab, I use the wget function to get the data from the 
+english to hawaiian dictionary with the following command:
+wget -O hwords http://mauimapp.com/moolelo/hwnwdseng.htm
+
+This creates a file called hwords which stores the html inside it.
+
+Using the command grep "<td>" 
+allows me to obtain the lines which have words on them.
+
+I use the command: sed 's/<[^>]*>//g' 
+to remove all the HTML tags on the page which makes it easier to see the 
+words.
+
+I use the command: sed '/^\s*$/d'
+to get rid of blank spaces like tab or space within the page that separate 
+separate entries 
+
+I use the command: sed -n '0~2p'
+to delete every odd line to get all hawaiian words. 
+
+The next command I use for my method is to then separate the words with 
+spaces between them. I accomplish this by utilizing the command:
+tr " " "\n" which replaces each space with a new line character.
+
+Now I want to make sure all the letters are lowercase before I sort them 
+to prevent getting multiple entries for the same word so I utilize the 
+command: 
+
+tr '[:upper:]' '[:lower:]' 
+
+Next, I need to get rid of the commas before I sort since the same word 
+would still be treated as a different entry due to a comma. Therefore, I 
+circumnavigate this problem by usin the command: 
+tr -d ',' 
+to delete the commas.
+
+Next, I use the command:
+sed "s/\`/'/g" 
+to change all '`' characters to '''.
+
+Now my goal is to get rid of any line which has characters that are not 
+a part of the Hawaiian language. I accomplish this by utilizing the 
+command: 
+grep -v "[^pk'mnwlhaeiou]" 
+Basically the '^' at the beginning will match lines that do not have these 
+characters in the line and then the -v flag will then get the other lines 
+instead of those without the characters. This essentially gets rid of the 
+lines without the Hawaiian characters like hala-kahiki and hea?.
+
+Afterwards, I then sort the list by using the command: 
+sort -u 
+
+Finally, the list is sorted and everything is nice, except the fact 
+that there is an extra blank line in the beginning because of using 
+the sort command. Therefore, I utilized the command: 
+sed '1d' 
+to delete the first line entirely and shift the list up.
+
+
+In order to get the words from the webpage to check with the hwords and 
+words, I utilize the command:
+cat lab | tr -cs 'A-Za-z' '[\n*]' | tr '[:upper:]' '[:lower:]' | 
+sort -u > ppp
+
+This makes all the words lowercase and then sorts them and stores them in 
+a file called 'ppp'. I used wget to store the words from the 
+assignment2 website into a file called 'lab'.
+
+Next, I want to check to see how many words are unique to just the website, 
+which means that are not hawaiian (or misspelled hawaiian). I am able 
+to accomplish this by using the command:
+comm ppp hwords -23 | wc
+which only outputs column one in which is only unique to ppp and is 
+therefore not in hwords and the wc command prints out the word count.
+
+comm: file 2 is not in sorted order
+    412     411    2626
+The following output reveals that I have 411 misspelled hawaiian words. 
+
+Next, I want to chcek the webpage with the English dictionary. I first 
+sort the English dictionary that was given earlier in the lab by using 
+the command: 
+
+cat words | sort -u
+
+Now I compare the website with words instead of hwords with the command: 
+comm ppp words -23 | wc
+This produces the output: 
+comm: file 2 is not in sorted order
+    39     38    247
+
+This means that the website has 38 misspelled English words. 
+
+To find examples of misspelled English words that are Hawaiian, I use the 
+command: 
+comm ppp words -23
+This produces a list of words that are misspelled in English, so I must 
+use my knowledge of the Hawaiian language to determine which words are 
+Hawaiian. Examples include halau, mauimapp, moolelo, and okina.
+
+To find examples of misspelled Hawaiian words that are actually English, I 
+use the command:
+comm ppp hwords -23
+Examples include: assign, assignment, assume, and assumption.
+
+My buildwords shell script is:
+File Edit Options Buffers Tools Sh-Script Help
+#!/bin/bash
+export LC_ALL='C'
+
+cat $1 |
+    grep "<td>" |
+
+    sed 's/<[^>]*>//g' |
+
+    sed '/^\s*$/d' |
+
+    sed -n '0~2p' |
+
+    tr " " "\n" |
+
+    tr '[:upper:]' '[:lower:]' |
+
+    tr -d ',' |
+
+    sed "s/\`/'/g" |
+
+    grep -v "[^pk'mnwlhaeiou]" |
+
+    sort -u |
+
+    sed '1d'

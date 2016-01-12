@@ -1,0 +1,94 @@
+Christopher Zhu UID: 104455996 
+
+Everything was done on lnxsrv07 1. The method of getting man to print 
+all commands with a specific word in its man page, we must use the -k 
+option as found in the manual. 
+
+2. The cp program and wc program are similar in path but slightly 
+different. The cp path is /usr/local/cs/bin/cp while the wc path is 
+/usr/local/cs/bin/wc 
+
+w h i c h SPACE c p w h i c h SPACE w c 
+
+3. The executable programs that is just one character long for my 
+machine are: X, w, and [. Using the man functionality, I was able to 
+find that the X executable runs on a large range of graphics and 
+computing machines and is a network transparent window system. The w 
+executable shows data on the users that are currently on the machine as 
+well as their processes. The [ executable just assesses the conditional 
+expression. 
+
+f i n d SPACE / u s r / b i n / SPACE - e x e c u t a b l e SPACE - n a 
+m e SPACE ? m a n SPACE X m a n SPACE w h e l p SPACE [ 
+
+4. The file that is actually executed when I execute the symbolic link 
+/usr/bin/cc is gcc which has the path /usr/local/cs/bin/gcc. 
+
+r e a d l i n k SPACE / u s r / b i n / c c 
+
+5. The symbolic mode g-s basically means it gives access to the process 
+that runs this file based on the user versus the group/owner of the 
+file. Basically its the negation of what g+s does. 
+
+6. The option within find that will look for the files that have been 
+modified within the last 3 days is -mtime 3. 
+
+m a n SPACE f i n d 
+
+7. The command I used in order to satisfy finding all directories 
+modified in the last 3 days was: find / -type d -mtime -3. I received a 
+lot of directories, but all of them my permission was denied. 
+
+8. From the files that are in the same directory of find, I have 
+discovered that 231 of them are symbolic links. w h i c h SPACE f i n d 
+f i n d SPACE / u s r / b i n SPACE - t y p e SPACE l SPACE | SPACE w c 
+SPACE - l 
+
+9. The oldest file in the /usr/lib directory is sse2 which was last 
+modified on March 13th, 2014. l s SPACE / u s r / l i b SPACE - l t 
+
+10. The locale command obtains its data from the LC_* environment 
+variables such as LC_NUMERIC and LC_TIME. m a n SPACE l o c a l e 
+
+11. In Emacs, the commands which have sort in their names include: 
+Buffer-menu-sort, sort-columns, sort-fields, sort-lines, 
+sort-numeric-fields, sort-pages, sort paragraphs, sort-regexp-fields, 
+tabulated-list-col-sort, tabulated-list-sort. 
+
+e m a c s M-x SPACE a p r o p o s ENTER sort C-x o 
+
+12. The Emacs keystrokes from C-a through C-z perform the following 
+actions: C-a: go backward to line beginning C-b: list all the buffers 
+C-c: exits Emacs permanently C-d: deletes the character that is forward 
+C-e: evaluates sexp before point C-f: move over the character forward 
+C-g: abort a partially typed or executing command (aka stop prematurely) 
+C-h: getting help/first portion of using the help system. Enter either 
+a, c, f, or m. C-i: undocumented/second portion of C-h C-i command which 
+find specified function or variable in Info C-j: undocumented (performs 
+a newline) C-k: kill line (to end of) forward C-l: redraws garbaged 
+screen for error recovery C-m: undocumented (performs a newline) C-n: 
+move to next line C-o: insert newline after point for formatting C-p: 
+move backward line C-q: undocumented/ second portion of version control 
+checkin/checkout for files C-r: search backward for incremental search 
+C-s: search forward C-t: transpose characters/ cause characters to 
+change places with each other C-u: undocumented/ prefix argument to act 
+as a repeat-count C-v: scroll to next screen C-w: kill region C-x: 
+prefix for a large variety of commands C-y: yank back last thing killed 
+C-z: suspend Emacs 
+
+e m a c s 
+
+13. C-g is used to cancel commands and arguments within the recursive 
+editing level as stated in the tutorial for emacs. 
+
+14. The Emacs yank function is basically a synonym for paste which means 
+it will place whatever is copied/cut where the cursor is. 
+
+15. The output of the ls -l command on the directory /usr/bin and the 
+directory listing of the Emacs dired command are very similar except 
+that the ls -l command includes two more extra directories not found 
+when using Emacs dired command (. and ..). The . directory has the 
+following data: dr-xr-xr-x 2 root root 77824 Sep 4 03:46 and the .. 
+directory has the following data: drwxr-xr-w. 17 root root 4096 Jun 19 
+2012. 
+

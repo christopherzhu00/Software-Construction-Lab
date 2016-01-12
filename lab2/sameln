@@ -1,0 +1,79 @@
+#!/bin/bash
+
+dir=$1
+# gets the argument and stores it into dir
+
+declare -a ARRAY
+# primary array that will hold everything after merging
+
+declare -a OTHERARRAY
+# secondary array to hold all files that don't start with '.'
+let MAX=0
+# index counter for first array
+let OTHERMAX=0
+# index counter for second array
+shopt -s dotglob
+# dotglob is used files starting with '.'s
+
+for FILE in $dir/*
+	    # goes through each of the contents in dir
+do
+    if [ ! -L "$FILE" ]
+       # check if iterator is not symbolic link
+       
+	then
+	    if [ -f "$FILE" ]
+	       # check if iterator is a file
+	       
+		then
+		    if [ -r "$FILE" ]
+		       # check to make sure its readable
+		    then
+
+			currentFile=$(basename $FILE)
+			# isolates the basename into a variable
+
+			currentFileStart=${currentFile:0:1}
+			# gets the first character of the basename
+
+			if [ "$currentFileStart" == "." ]
+			   # checks to see if first character is a '.' character for priority
+			then			    
+			    ARRAY[$MAX]="$FILE"
+			    # adds the files leading with '.' into the first array
+			    let MAX=MAX+1
+			else
+			    OTHERARRAY[$OTHERMAX]="$FILE"
+			    # adds every other file into the second array
+			    let OTHERMAX=OTHERMAX+1
+			fi
+		    else
+	       		echo "$FILE is unreadable."
+			# file is unreadable so provides corresponding error message
+		    fi
+		fi
+	fi
+done
+
+for FILE in ${OTHERARRAY[@]}
+ # combining the two arrays together
+do
+    ARRAY[$MAX]="$FILE"
+    let MAX=MAX+1
+done
+
+for((i=0; i<$MAX; i++))
+   # nested for loop to make sure each file checks with all the other ones
+do
+    for((j=i+1; j<$MAX; j++))
+       # starts at the file after the first one
+    do
+	cmp -s ${ARRAY[$i]} ${ARRAY[$j]}      
+        if [ $? -eq 0 ]
+	   # holds the value from cmp and checks to see if the files match  
+        then		    
+     	    ln -f ${ARRAY[$i]} ${ARRAY[$j]}
+	    # delete the copy and make a hard link to the first file
+	fi
+    done
+done

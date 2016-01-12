@@ -1,0 +1,26 @@
+#!/bin/bash
+export LC_ALL='C'
+
+cat $1 |
+    grep "<td>" |
+
+    sed 's/<[^>]*>//g' |
+
+    sed '/^\s*$/d' |
+
+    sed -n '0~2p' |
+    
+    tr " " "\n" |
+
+    tr '[:upper:]' '[:lower:]' |
+
+    tr -d ',' |
+
+    sed "s/\`/'/g" |
+
+    grep -v "[^pk'mnwlhaeiou]" |
+
+    sort -u |
+    
+    sed '1d'
+    

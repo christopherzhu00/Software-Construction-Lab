@@ -1,0 +1,107 @@
+#include <stdio.h>
+
+int main()
+{
+	string from, to;
+	
+	cin from;
+	cin to;
+	
+	if from.length != to.length 
+		return std.err;
+	
+
+	string placeholder;
+	for(int i = 0; i < from.length; i++)
+	{
+		placeholder = from[i];
+		for(int j = i+1; j<from.length; j++)
+		{
+			if(placeholder == from[j])
+				return std.err;
+		}
+	}
+	
+	for(int i = 0; i < to.length; i++)
+	{
+		placeholder = to[i];
+		for(int j = i+1; j<to.length; j++)
+		{
+			if(placeholder == to[j])
+				return std.err;
+		}
+	}
+	
+	int z = getchar();
+	while(z != EOF)
+	{
+		for(int i = 0; i < from.length; i++)
+		{
+			if(z == from[i])
+				putchar(to[i]);
+		}
+	}
+	return 0;
+}
+
+
+
+#include <unistd.h>
+
+int main()
+{
+	string from, to;
+	
+	cin from;
+	cin to;
+	
+	if from.length != to.length 
+		return std.err;
+	
+
+	string placeholder;
+	for(int i = 0; i < from.length; i++)
+	{
+		placeholder = from[i];
+		for(int j = i+1; j<from.length; j++)
+		{
+			if(placeholder == from[j])
+				return std.err;
+		}
+	}
+	
+	for(int i = 0; i < to.length; i++)
+	{
+		placeholder = to[i];
+		for(int j = i+1; j<to.length; j++)
+		{
+			if(placeholder == to[j])
+				return std.err;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	char data[1];
+	while(read(0, data, 1) > 0)
+	{
+	// fills in buffer
+	}
+	
+	for(int i = 0; i < data.length; i++)
+	{
+		for(int y = 0; y < from.length; y++)
+		{
+			if(data[i] == from[y])
+				data[i] = to[y];
+		}
+	}
+	write(1, data, data.length)
+}
+
+
+
+

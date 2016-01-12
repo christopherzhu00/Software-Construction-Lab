@@ -1,0 +1,33 @@
+Christopher Zhu
+UID:104455996
+
+Homework Questions
+
+1. If the other team had been observing all the bytes which go across the 
+network, the network should still be secure since the message is 
+encrypted. Thus, the bytes that they look at should just be a mess which 
+doesn't resemble anything since the bytes themselves are encrypted. My 
+answer would change if (1) the other teams had tapped our keyboards and 
+observed all the keystrokes because then they are able to see the messages 
+before they are encrypted and thus the encryption doesn't matter. After the 
+data has been encrypted do the perpetrators not know what the message is, 
+but if they already know before the encryption begins, the resulting network 
+will not be secure. If they had physical control of my USB, it would also 
+be insecure because they would have access to all the files since the data 
+when booting off of the USB would be stored within the USB itself which 
+includes the public and private keys which can be used to decrypt. They 
+also have the actual files themselves which would make the network not 
+secure. 
+
+2. The grp --verify command in the following instructions doesn't 
+actually verify that I personally made the tar file since it only checks 
+to see whether the file has been modified since it has last been signed. 
+This can be abused by other people because they can just change it and then 
+sign it which would not cause any problem with the grp --verify command 
+since it would say the file has not been modified since the last time it was 
+signed. In order to fix this problem, I would have to use a third party 
+verification method such as the certificate based authentication which 
+keeps track of the actual owner's signature so basically acts as a middle 
+man to check the authenticity of a file. This method is prevalent in 
+today's society and is used by almost all companies to make sure data 
+isn't tampered.

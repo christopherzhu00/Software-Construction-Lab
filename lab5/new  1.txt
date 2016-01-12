@@ -1,0 +1,10 @@
+reads from std input for arguments
+
+
+
+allocate memory for it
+
+for loop through smaller string
+
+if(arg1 ^ 42 < arg2 ^ 42)
+

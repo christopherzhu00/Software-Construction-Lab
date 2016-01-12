@@ -1,0 +1,167 @@
+Christopher Zhu
+UID:104455996
+
+To download the coreutils zip file, I used the wget command: 
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+
+This produces the following output:
+--2015-10-15 17:02:47--  ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+           => “coreutils-7.6.tar.gz”
+Resolving ftp.gnu.org... 208.118.235.20, 2001:4830:134:3::b
+Connecting to ftp.gnu.org|208.118.235.20|:21... connected.
+Logging in as anonymous ... Logged in!
+==> SYST ... done.    ==> PWD ... done.
+==> TYPE I ... done.  ==> CWD (1) /gnu/coreutils ... done.
+==> SIZE coreutils-7.6.tar.gz ... 10014650
+==> PASV ... done.    ==> RETR coreutils-7.6.tar.gz ... done.
+Length: 10014650 (9.5M) (unauthoritative)
+
+100%[======================================>] 10,014,650  1.35M/s   in 7.4s
+
+2015-10-15 17:02:56 (1.29 MB/s) - “coreutils-7.6.tar.gz” saved [10014650]
+
+
+Afterwards, I extract it by utilizing the tar command with the -xvf flag 
+using the command: 
+tar -xvf coreutils-7.6.tar.gz
+
+Next, I put myself into the directory by using the cd command so that 
+I can explore the extracted files:
+cd coreutils-7.6
+
+I explore the INSTALL file by opening it up with emacs and learn how to 
+utilize the prefix flag to continue the installation.
+
+I then want to configure the installation by using the configure file but 
+first I make a directory for the installation within my /u/cs/ugrad/christoz 
+called lab3 by using the mkdir command:
+mkdir lab3
+
+Next I call the configure file to configure the installation by using the 
+command:
+./configure --prefix=/u/cs/ugrad/christoz/lab3
+
+Afterwards, I compile and install the program by using the commands:
+make 
+& 
+make install
+
+I first check to make sure the locale is correct by using the locale 
+command, and I confirm the locale is en_US.UTF-8 locale.
+
+By using the cd command into the bin for lab3, I am able to see all the 
+files within the bin folder. I notice that there is the ls function in 
+question so I call it by using the command:
+./ls -l 
+By using the -l flag I gain acces to more information to the files including 
+the date in which I can see it is indeed in the wrong format. 
+(2010-10-15)
+
+Now, I go into the coreutils-7 directory and then used the command from the 
+slides to apply the patch:
+vim patch_file
+
+Next, I take the code from the provided patch from Brady and put it within 
+the vim file. The only thing I have to do is add the "--- a" keys at the top 
+since they do not transfer over for some odd reason. 
+
+Now I save it by using the commands esc + :w and exit by using the command 
+esc + :x to exit. 
+
+Then I patch th eifle by using the command: 
+patch -p1 < patch_file
+The corresponding output I receive is:
+patching file src/ls.c
+Hunk #1 succeeded at 2013 (offset -1 lines).
+Hunk #2 succeeded at 2028 (offset -1 lines).
+
+Next I compile to build but not install the fixed version and obtain the 
+following output: 
+make  all-recursive
+make[1]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6'
+Making all in lib
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+make  all-recursive
+make[3]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+make[4]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+make[4]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+make[3]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/lib'
+Making all in src
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/src'
+make  all-am
+make[3]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/src'
+  CC     ls.o
+  CCLD   dir
+  CCLD   vdir
+  CCLD   ls
+make[3]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/src'
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/src'
+Making all in doc
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/doc'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/doc'
+Making all in man
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/man'
+  GEN    dir.1
+  GEN    vdir.1
+  GEN    ls.1
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/man'
+Making all in po
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/po'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/po'
+Making all in tests
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/tests'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/tests'
+Making all in gnulib-tests
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make  all-recursive
+make[3]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make[4]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make[4]: Nothing to be done for 'all-am'.
+make[4]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make[3]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6/gnulib-tests'
+make[2]: Entering directory '/w/home.05/cs/christoz/coreutils-7.6'
+make[2]: Nothing to be done for 'all-am'.
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6'
+make[1]: Leaving directory '/w/home.05/cs/christoz/coreutils-7.6'
+
+The command: 
+make all-recursive 
+makes it so that it recursively looks to see if more files need to be 
+compiled.
+
+The make all-am command automaticacally generates Makefile.in files from 
+Makefile.am files where a Makefile.am is a series of make variable definitions.
+
+The CC ls.o command means that it compiles the ls.o file. 
+
+Next, the CCLD commands performs the linking for the files. 
+
+Finally, the GEN commands generates the files.
+
+Now, I want to test the patch so I make two files by using the commands: 
+touch test 
+& 
+touch -t 201401210959.30 test_file 
+
+to create both a recent file and a very old file.
+
+Next I go back into the src directory and call the command: 
+./ls -l /u/cs/ugrad/christoz 
+I then see that the files provide the correct format as expected from the 
+patch.
+
+
+
+
+
+
+
+
+
+
+

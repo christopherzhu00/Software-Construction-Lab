@@ -1,0 +1,57 @@
+Christopher Zhu
+UID:104455996
+
+Question 1: 
+Brady's patch removed the line "case_long_iso_time_style:" because it was 
+called before and helps clean excess code. It is not necessary to keep it, 
+but it does nothing beneficial to the code and can thus be removed.
+
+Question 2:
+The patched version of the coreutils-7.6 may pose a problem because it gets 
+rid of the fallback of having the date in the default format which is easy 
+to understand. By using the patch, the date will be changed to the English 
+format and thus may cause problems for other countries using the program. 
+This in turn can lead to confusion with the programmers who relied on the 
+standard format to get the date.
+
+Question 3:
+Before I am able to actually answer this question, I first get the python 
+script code by using the wget command:
+wget -O randline.py 
+http://web.cs.ucla.edu/classes/fall15/cs35L/assign/randline.py 
+Next, I then use the chmod to give it executable permission:
+chmod +x randline.py 
+Afterwards, I run the script with dev/null by using the command:
+./randline.py /dev/null 
+I then receive the following output:
+Traceback (most recent call last):
+  File "./randline.py", line 70, in <module>
+    main()
+  File "./randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "./randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/lib64/python2.6/random.py", line 261, in choice
+    return seq[int(self.random() * len(seq))]  # raises IndexError if seq
+	is empty
+IndexError: list index out of range
+
+An index error was produced when we ran the command because /dev/null is a 
+null device which discards all data written to it and is empty since it has 
+0 bytes. Therefore, when we run the python script which attempts to get a 
+random line from an empty file, it will throw an exception error since there 
+are no lines to begin with.
+
+Question 4:
+I utilize the following command to run the script with python 3: 
+python3 randline.py /dev/null
+This produces the following output:
+File "randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+
+There is a syntax error because python 2 allows exceptions to be able to be 
+iterated. However, python 3 has discontinued the use of allowing this 
+behavior and thus an invalid syntax error is thrown.
+

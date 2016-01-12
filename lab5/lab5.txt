@@ -1,0 +1,148 @@
+Christopher Zhu
+UID:104455996
+
+The first thing I do in this lab is download the buggy version of coreutils 
+by using the wget command:
+wget -O bug 
+http://web.cs.ucla.edu/classes/fall15/cs35L/assign/coreutils-with-bug.tar.gz
+
+By using the -O flag, I am able to rename the tar file to the name bug which 
+makes my life easier. 
+Next, I use the tar xvf command in order to unzip the file as seen in the 
+following command:
+tar xvf bug
+
+The command prompt then spews out a bunch of information showing that 
+it indeed unzipped the files and by using the ls command afterwards, I can 
+see that the new directory: coreutils-with-bug is made.
+
+Now, I use the cd command to go within the directory and then attempted to 
+build the file by using the command: 
+./configure CLFAGS="-g" 
+To compile the file I use the make command. The command prompt shows a 
+bunch of failures as seen in the following output:
+
+Makefile:659: recipe for target 'utimecmp.o' failed
+make[3]: *** [utimecmp.o] Error 1
+make[3]: Leaving directory '/w/home.05/cs/christoz/coreutils-with-bug/lib'
+Makefile:414: recipe for target 'all' failed
+make[2]: *** [all] Error 2
+make[2]: Leaving directory '/w/home.05/cs/christoz/coreutils-with-bug/lib'
+Makefile:419: recipe for target 'all-recursive' failed
+make[1]: *** [all-recursive] Error 1
+make[1]: Leaving directory '/w/home.05/cs/christoz/coreutils-with-bug'
+Makefile:357: recipe for target 'all' failed
+make: *** [all] Error 2
+
+It turns out that the program was not being allowed to compile since there 
+were some naming errors located within the tee.c file. The patch then fixes 
+the problem by renaming it to prevent that error from occurring.
+
+After receiving this error, I download the patch that is provided on the 
+spec using the wget command again:
+wget http://web.cs.ucla.edu/classes/fall15/cs35L/assign/coreutils.diff
+
+Since the diff patch file is within the current directory, we use a pnum of 
+0 when we use the patch command in order to patch correctly. We do this 
+by using the command: 
+patch -p0 < coreutils.diff 
+
+The output we receive is as so:
+patching file lib/utimens.c
+patching file lib/utimens.h
+patching file src/copy.c
+patching file src/tee.c
+patching file src/touch.c
+
+This lets us know that our patch has succeeded. 
+I first create a temporary folder to put our test files in by using the 
+commands: 
+tmp=$(mktemp -d)
+
+By using the cd $tmp command I was able to see that my temporary folder is 
+called: /tmp/tmp.MoVE0HFiye
+
+In order to test our patch to see if it works, we use the touch command with 
+the files located within the spec by using the commands: 
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+$ touch now
+$ sleep 1
+$ touch now1
+
+I was then able to check that the bug was indeed there by using the command: 
+/u/cs/ugrad/christoz/coreutils-with-bug/src/ls -lt wwi-armistice now now1
+
+which produced the following output:
+-rw-r--r-- 1 christoz csugrad 0 1918-11-11 03:00 wwi-armistice
+-rw-r--r-- 1 christoz csugrad 0 2015-11-01 01:09 now1
+-rw-r--r-- 1 christoz csugrad 0 2015-11-01 01:09 now
+
+which is what the spec said that it would do in which it handles really old 
+files incorrectly by putting it at the top when it should be at the bottom. 
+
+I also rechecked to make sure by using the commands as stated in the spec: 
+TZ=UTC0 /u/cs/ugrad/christoz/coreutils-with-bug/src/ls -lt --full-time 
+wwi-armistice now now1
+and got the result:
+
+-rw-r--r-- 1 christoz csugrad 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+-rw-r--r-- 1 christoz csugrad 0 2015-11-01 09:09:31.744474031 +0000 now1
+-rw-r--r-- 1 christoz csugrad 0 2015-11-01 09:09:29.065379353 +0000 now
+
+
+Now it is my job to fix this problem so I will use the gdb as a debugger. 
+
+I look within the ls.c file to look for the place where it compares the 
+times of files and discover that there is a function compare_mtime which 
+performs that. 
+
+Because the ls file is in charge of this problem, we inspect the file by 
+using the command: 
+gdb ~/coreutils-with-bug/src/ls 
+I then establish a breakpoint at the beginning of the file so I can start 
+going though the file by using the command: 
+break main 
+
+I then make a breakpoint there by using the command: break compare_mtime 
+
+I then start it by using the run command as follows: 
+run -lt wwi-armistice now now1
+
+By observing the following variables through the method, I notice that 
+wwi-armistrice stores a negative number where now and now1 store 
+positive numbers. 
+
+There appears to be an overflow issue when subtracting a large negative 
+number from a large positive number. The result is a positive number when the
+expected value is a negative number and this incorrect result indicates that
+there is integer overflow. 
+
+I try to solve this issue by creating a copy and then changing it using 
+emacs. 
+
+
+My suggested change is to avoid integer overflow by just comparing the two 
+values using the '<' or '>' operator to determine whether one is greater 
+than the other.
+
+
+
+Afterwards, I would make a diff which would provide me the patch 
+for the final product as well as adding a ChangeLog
+
+When reproducing the problem in the home directory of the linux servers 
+versus the tmp directory, it appears that the wwi-armistice is now in the 
+future of 2054. 
+
+This is because timestamps for files are represented by the number of 
+seconds that pass after the midnight of the Unix epoch (Jan 1, 1970). 
+To represent a time before this means we have to use negative numbers. 
+Since tmp is on local file system while ~(home) is on the NFS file system, 
+the numbers are stored differently. NFS uses 32 bit unsigned while tmp uses 
+32 bit signed. Therefore, NFS can't represent negative time numbers and 
+therefore the number of seconds is calculated to be a positive number which 
+results in a future date even though it is in the past.
+
+
+
+

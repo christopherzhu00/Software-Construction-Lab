@@ -1,0 +1,43 @@
+Christopher Zhu
+UID:104455996
+
+I first make a really large file so that I can get a more accurate gauge on 
+the time difference between sfrob and sfrobu by using the command: 
+head --bytes=10000000 /dev/urandom > reallyreallybigfile.txt
+
+The results are shown below:
+sfrob
+real    0m11.627s
+user    0m0.440s
+sys     0m0.120s
+
+
+
+sfrobu
+Comparisons: 551490
+
+real    0m12.789s
+user    0m0.375s
+sys     0m2.908s
+
+As the results shows, it becomes apparent that actually using system calls 
+with sfrobu takes longer for the system than using the library with sfrob 
+which does it for us. 
+
+I then test this on various input line files by creating a random text file 
+with 10 words in notepad++ to create a file representing 10 words. To get a 
+file with 100 words, I then copy paste it by 10 times. I keep doing this 
+until I get all powers of 10 for input words until 100000.
+
+# of words		# of Comparisons
+
+10				23
+100				485
+1000			7660
+10000			104583
+100000			1329329
+
+
+My show a big-O value of a little less than nlogn base 2 is valid since 
+qsort has a big-o value of nlogn base 2.
+

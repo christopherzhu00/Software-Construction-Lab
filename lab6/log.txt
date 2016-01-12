@@ -1,0 +1,90 @@
+Christopher Zhu
+UID:104455996
+
+Lab 6
+
+First I make sure that I have the openssh-server and openssh-client installed by using the command: dpkg –get-selections | grep openssh. 
+It only outputs: 
+openssh-client install
+
+instead of:
+openssh-server install
+openssh-client install
+
+To fix this problem, I utilize the commands:
+sudo apt-get install openssh-server 
+sudo apt-get isntall openssh-client 
+
+After a few moments of letting it finish, the correct output appears.
+
+Server Side:
+Next I work on the server side of the lab. I start off by using the command ssh-keygen and then pressing RETURN three times to not change the default location. The following output is shown below:
+The key fingerprint is: 
+75:0f:ac:c6:a3:73:44:29:e7:7d:63:e3:86:1e:28:d9 ubuntu@ubuntu 
+The key's randomart image is: 
++--[ RSA 2048]----+ 
+|                 | 
+|           o     | 
+|        . = +    | 
+|         B + o   | 
+|        S B . *  | 
+|         * o = o | 
+|        = E o o  | 
+|         + . o   | 
+|            .    | 
++-----------------+ 
+
+Then I create an account for the client (Zach Bordofsky), by using the commands:  
+sudo useradd -d /home/zachb -m zachb
+sudo passwd zachb 
+(I set his password to nicole for personal reasons) 
+
+Next I create a .ssh directory for Zach by using the commands: 
+cd /home/zachb
+sudo mkdir .ssh
+
+Then I change the ownership and permission on the .ssh directory with the folowing commands: 
+sudo chown -R zachb .ssh :128.97.84.58 
+sudo chmod 700 .ssh 
+
+I then have my partner follow the instructions and he was correctly as able to run a command on the remote host. Hooray!
+
+
+Client Side:
+After my partner has finished his commands for setting up the servers, I now perform the commands for the client. 
+
+I first make sure I cd back to the home directory by using the command: 
+cd
+
+Next, I use the command ssh-keygen again and overwrite the old keygen to generate the public and private keys. I obtain the following output: 
+The key fingerprint is: 
+16:50:3c:83:0a:b2:4b:1c:f4:de:97:0b:3d:da:53:45 ubuntu@ubuntu 
+The key's randomart image is: 
++--[ RSA 2048]----+ 
+|..    .+.  E     | 
+|..o   ..+ .      | 
+|.o.o .  .o .     | 
+|.o. o . ...      | 
+|.. . o =S.       | 
+|.     =.+        | 
+|     . +         | 
+|        .        | 
+|                 | 
++-----------------+ 
+Next I copy the public key to the server for keybased authentication with the command: 
+ssh-copy-id -i chris@128.97.84.57
+
+Afterwards, I add the private key to authentication agent by using the command: 
+ssh-add 
+Next I actually SSH to the server by using the command: 
+ssh chris@128.97.84.57
+
+After it works, I use the command 'exit' and then check with the command: 
+ssh -X chris@128.97.84.57
+
+to use X11 session forwarding. 
+After I confirm that both work, I want to run a command on the remote host by using the commands: 
+xterm
+gedit 
+firefox 
+And all of these work so hooray!~
